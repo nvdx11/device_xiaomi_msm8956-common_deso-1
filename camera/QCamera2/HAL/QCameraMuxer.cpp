@@ -40,6 +40,7 @@
 
 #include "QCameraMuxer.h"
 #include "QCamera2HWI.h"
+#include "QCamera3HWI.h"
 #include "QCameraPostProc.h"
 #include "QCamera3HWI.h"
 
@@ -224,13 +225,12 @@ int QCameraMuxer::get_camera_info(int camera_id, struct camera_info *info)
 {
     int rc = NO_ERROR;
     CDBG_HIGH("%s: E", __func__);
-    cam_sync_type_t type;
     if ((camera_id < 0) || (camera_id >= gMuxer->getNumberOfCameras())) {
         ALOGE("%s : Camera id %d not found!", __func__, camera_id);
         return -ENODEV;
     }
     if(info) {
-        rc = gMuxer->getCameraInfo(camera_id, info, &type);
+        rc = gMuxer->getCameraInfo(camera_id, info);
     }
     CDBG_HIGH("%s: X, rc: %d", __func__, rc);
     return rc;
@@ -1906,8 +1906,7 @@ int QCameraMuxer::getNumberOfCameras()
  *              NO_ERROR  -- success
  *              none-zero failure code
  *==========================================================================*/
-int QCameraMuxer::getCameraInfo(int camera_id,
-        struct camera_info *info, cam_sync_type_t *p_cam_type)
+int QCameraMuxer::getCameraInfo(int camera_id, struct camera_info *info)
 {
     int rc = NO_ERROR;
     CDBG_HIGH("%s: E, camera_id = %d", __func__, camera_id);
